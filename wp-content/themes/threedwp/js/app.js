@@ -19,7 +19,7 @@ animate();
 function init() {
 
 	container = document.createElement( 'div' );
-	
+
 	main = document.getElementById('main')
 
 	document.body.appendChild( container );
@@ -34,10 +34,11 @@ function init() {
 	info.innerHTML = 'Drag to spin the cube';
 	container.appendChild( info );
 
-	camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 1000 );
+	camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 0.5, 20000 );
 	camera.position.x = 0;
-	camera.position.y = 50;
-	camera.position.z = 500;
+	camera.position.y = 60;
+	camera.position.z = 900;
+
 
 	scene = new THREE.Scene();
 
@@ -66,7 +67,7 @@ function init() {
 
 	var asphault = new THREE.MeshBasicMaterial( { map: asphault, side: THREE.DoubleSide } );
 
-	var planeGeometry = new THREE.PlaneBufferGeometry(500,500);
+	var planeGeometry = new THREE.PlaneBufferGeometry(800,800);
 	var planeMaterial = new THREE.MeshLambertMaterial({color: 0xffffff});
 
 
