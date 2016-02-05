@@ -54,8 +54,11 @@ html {
 }
 
 body {
-	margin: 0;
+	background-color: rgb(200,200,200);
+	margin: 0px;
+	overflow: hidden;
 }
+
 
 article,
 aside,
