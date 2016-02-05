@@ -1,4 +1,4 @@
-var container, stats;
+var container, stats, main;
 
 var camera, scene, renderer;
 
@@ -19,7 +19,12 @@ animate();
 function init() {
 
 	container = document.createElement( 'div' );
+	
+	main = document.getElementById('main')
+
 	document.body.appendChild( container );
+
+	document.body.insertBefore(container,primary );
 
 	var info = document.createElement( 'div' );
 	info.style.position = 'absolute';
