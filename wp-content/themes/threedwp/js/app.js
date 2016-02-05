@@ -2,7 +2,7 @@ var container, stats;
 
 var camera, scene, renderer;
 
-var cube, plane;
+var cube, plane2;
 
 var targetRotation = 0;
 var targetRotationOnMouseDown = 0;
@@ -30,7 +30,8 @@ function init() {
 	container.appendChild( info );
 
 	camera = new THREE.PerspectiveCamera( 70, window.innerWidth / window.innerHeight, 1, 1000 );
-	camera.position.y = 150;
+	camera.position.x = 0;
+	camera.position.y = 50;
 	camera.position.z = 500;
 
 	scene = new THREE.Scene();
@@ -53,15 +54,29 @@ function init() {
 	cube.position.y = 150;
 	scene.add( cube );
 
-	// Plane
 
-	var geometry = new THREE.PlaneBufferGeometry( 200, 200 );
-	geometry.rotateX( - Math.PI / 2 );
+	var asphault = new THREE.ImageUtils.loadTexture( '/wp-content/themes/threedwp/js/app-assets/img/asphault.jpg' );
+	asphault.wrapS = THREE.RepeatWrapping;
+    asphault.wrapT = THREE.RepeatWrapping;
 
-	var material = new THREE.MeshBasicMaterial( { color: 0xe0e0e0, overdraw: 0.5 } );
+	var asphault = new THREE.MeshBasicMaterial( { map: asphault, side: THREE.DoubleSide } );
 
-	plane = new THREE.Mesh( geometry, material );
-	scene.add( plane );
+	var planeGeometry = new THREE.PlaneBufferGeometry(500,500);
+	var planeMaterial = new THREE.MeshLambertMaterial({color: 0xffffff});
+
+
+	var plane2 = new THREE.Mesh(planeGeometry,asphault);
+
+	plane2.rotateX( - Math.PI / 2 );
+	plane2.position.x = 0;
+	plane2.position.y = -150;
+	plane2.position.z = -100;
+	scene.add(plane2);
+
+
+
+
+
 
 	renderer = new THREE.CanvasRenderer();
 	renderer.setClearColor( 0xf0f0f0 );
@@ -174,7 +189,7 @@ function animate() {
 
 function render() {
 
-	plane.rotation.y = cube.rotation.y += ( targetRotation - cube.rotation.y ) * 0.05;
+	cube.rotation.y += ( targetRotation - cube.rotation.y ) * 0.05;
 	renderer.render( scene, camera );
 
 }
