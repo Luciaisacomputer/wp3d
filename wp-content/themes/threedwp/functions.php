@@ -132,6 +132,7 @@ function app_scripts() {
 	wp_enqueue_script( 'threedwp-threejs', get_template_directory_uri() . '/js/three.min.js', array(), '20120206', true );
 	wp_enqueue_script( 'threedwp-renderer', get_template_directory_uri() . '/js/app-assets/CanvasRenderer.js', array(), '20120206', true );
 	wp_enqueue_script( 'threedwp-projector', get_template_directory_uri() . '/js/app-assets/Projector.js', array(), '20120206', true );
+	wp_enqueue_script( 'threedwp-detector', get_template_directory_uri() . '/js/app-assets/detector.js', array(), '20120206', true );
 	wp_enqueue_script( 'threedwp-stats', get_template_directory_uri() . '/js/app-assets/stats.min.js', array(), '20120206', true );
 	wp_enqueue_script( 'threedwp-appjs', get_template_directory_uri() . '/js/app.js', array(), '20120206', true );
 	

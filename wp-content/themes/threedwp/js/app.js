@@ -54,11 +54,13 @@ function init() {
 
 	}
 
-	var material = new THREE.MeshBasicMaterial( { vertexColors: THREE.FaceColors, overdraw: 0.5 } );
+	var material = new THREE.MeshBasicMaterial( { vertexColors: THREE.FaceColors, overdraw: 0 } );
 
 	cube = new THREE.Mesh( geometry, material );
-	cube.position.y = 150;
+	cube.position.y = 0;
 	scene.add( cube );
+
+
 
 
 	var asphault = new THREE.ImageUtils.loadTexture( '/wp-content/themes/threedwp/js/app-assets/img/asphault.jpg' );
@@ -71,20 +73,20 @@ function init() {
 	var planeMaterial = new THREE.MeshLambertMaterial({color: 0xffffff});
 
 
-	var plane2 = new THREE.Mesh(planeGeometry,asphault);
+	var ground = new THREE.Mesh(planeGeometry,asphault);
 
-	plane2.rotateX( - Math.PI / 2 );
-	plane2.position.x = 0;
-	plane2.position.y = -150;
-	plane2.position.z = -100;
-	scene.add(plane2);
-
-
+	ground.rotateX( - Math.PI / 2 );
+	ground.position.x = 0;
+	ground.position.y = -150;
+	ground.position.z = -100;
+	scene.add(ground);
 
 
 
+	//renderer = Detector.webgl? new THREE.WebGLRenderer(): new THREE.CanvasRenderer();
 
-	renderer = new THREE.CanvasRenderer();
+
+	renderer = Detector.webgl? new THREE.WebGLRenderer(): new THREE.CanvasRenderer();
 	renderer.setClearColor( 0xf0f0f0 );
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( window.innerWidth, window.innerHeight );
