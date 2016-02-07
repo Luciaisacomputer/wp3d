@@ -127,15 +127,27 @@ function threedwp_scripts() {
 }
 add_action( 'wp_enqueue_scripts', 'threedwp_scripts' );
 
+add_action( 'wp_enqueue_scripts', 'register_jquery' );
+function register_jquery() {
+    if (!is_admin() && $GLOBALS['pagenow'] != 'wp-login.php') {
+        // comment out the next two lines to load the local copy of jQuery
+        wp_deregister_script('jquery');
+        wp_register_script('jquery', 'http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js', false, '1.11.2');
+        wp_enqueue_script('jquery');
+    }
+}
 
 function app_scripts() {
-	wp_enqueue_script( 'threedwp-threejs', get_template_directory_uri() . '/js/three.min.js', array(), '20120206', true );
-	wp_enqueue_script( 'threedwp-renderer', get_template_directory_uri() . '/js/app-assets/CanvasRenderer.js', array(), '20120206', true );
-	wp_enqueue_script( 'threedwp-projector', get_template_directory_uri() . '/js/app-assets/Projector.js', array(), '20120206', true );
-	wp_enqueue_script( 'threedwp-detector', get_template_directory_uri() . '/js/app-assets/detector.js', array(), '20120206', true );
-	wp_enqueue_script( 'threedwp-stats', get_template_directory_uri() . '/js/app-assets/stats.min.js', array(), '20120206', true );
-	wp_enqueue_script( 'threedwp-appjs', get_template_directory_uri() . '/js/app.js', array(), '20120206', true );
-	
+
+	if(is_home()):
+		wp_enqueue_script( 'threedwp-threejs', get_template_directory_uri() . '/js/three.min.js', array(), '20120206', true );
+		wp_enqueue_script( 'threedwp-renderer', get_template_directory_uri() . '/js/app-assets/CanvasRenderer.js', array(), '20120206', true );
+		wp_enqueue_script( 'threedwp-projector', get_template_directory_uri() . '/js/app-assets/Projector.js', array(), '20120206', true );
+		wp_enqueue_script( 'threedwp-detector', get_template_directory_uri() . '/js/app-assets/detector.js', array(), '20120206', true );
+		wp_enqueue_script( 'threedwp-css3object', get_template_directory_uri() . '/js/app-assets/css3object.js', array(), '20120206', true );
+		wp_enqueue_script( 'threedwp-stats', get_template_directory_uri() . '/js/app-assets/stats.min.js', array(), '20120206', true );
+		wp_enqueue_script( 'threedwp-appjs', get_template_directory_uri() . '/js/app.js', array(), '20120206', true );
+	endif;
 }
 
 add_action( 'wp_enqueue_scripts', 'app_scripts' );

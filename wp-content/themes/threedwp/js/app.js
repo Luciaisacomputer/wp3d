@@ -1,8 +1,10 @@
 var container, stats, main;
 
-var camera, scene, renderer;
+var camera, scene, renderer, cssScene, rendererCSS;
 
 var cube, plane2;
+
+var element;
 
 var targetRotation = 0;
 var targetRotationOnMouseDown = 0;
@@ -12,6 +14,31 @@ var mouseXOnMouseDown = 0;
 
 var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
+
+var getPageInfo;
+var pageInfo;
+
+
+function getJson(url) {
+    return JSON.parse($.ajax({
+        type: 'GET',
+        url: url,
+        dataType: 'json',
+        global: false,
+        async: false,
+        success: function (data) {
+            return data;
+        }
+    }).responseText);
+}
+
+getPageInfo = getJson('http://wp3d.dev/wp-json/wp/v2/pages/5');
+
+
+//console.log(getPageInfo.excerpt.rendered);
+
+
+pageInfo = getPageInfo.excerpt.rendered;
 
 init();
 animate();
@@ -81,16 +108,72 @@ function init() {
 	ground.position.z = -100;
 	scene.add(ground);
 
-
+		var light = new THREE.PointLight(0xffffff);
+	light.position.set(0,250,0);
+	scene.add(light);
 
 	//renderer = Detector.webgl? new THREE.WebGLRenderer(): new THREE.CanvasRenderer();
+
+
+	var planeMaterial   = new THREE.MeshBasicMaterial({color: 0xffffff, opacity: 1, side: THREE.DoubleSide });
+	var planeWidth = 360;
+    var planeHeight = 120;
+	var planeGeometry = new THREE.PlaneGeometry( planeWidth, planeHeight );
+	var planeMesh= new THREE.Mesh( planeGeometry, planeMaterial );
+	planeMesh.position.y += planeHeight/2;
+	// add it to the standard (WebGL) scene
+	//scene.add(planeMesh);
+	
+	// create a new scene to hold CSS
+	cssScene = new THREE.Scene();
+	// create the iframe to contain webpage
+	var element	= document.createElement('iframe')
+	// webpage to be loaded into iframe
+	element.src = 'data:text/html;charset=utf-8,' + encodeURI(pageInfo);
+	// width of iframe in pixels
+	var elementWidth = 1024;
+	// force iframe to have same relative dimensions as planeGeometry
+	var aspectRatio = planeHeight / planeWidth;
+	var elementHeight = 1024;
+	element.style.width  = elementWidth + "px";
+	element.style.height = elementHeight + "px";
+	
+	// create a CSS3DObject to display element
+	var cssObject = new THREE.CSS3DObject( element );
+	// synchronize cssObject position/rotation with planeMesh position/rotation 
+	cssObject.position = planeMesh.position;
+	cssObject.rotation = planeMesh.rotation;
+	// resize cssObject to same size as planeMesh (plus a border)
+	var percentBorder = 0.05;
+	cssObject.scale.x /= (1 + percentBorder) * (elementWidth / planeWidth);
+	cssObject.scale.y /= (1 + percentBorder) * (elementWidth / planeWidth);
+	cssObject.rotation.z = 180 * Math.PI / 180;
+	cssScene.add(cssObject);
+	
+	// create a renderer for CSS
+	rendererCSS	= new THREE.CSS3DRenderer();
+	rendererCSS.setSize( window.innerWidth, window.innerHeight );
+	rendererCSS.domElement.style.position = 'absolute';
+	rendererCSS.domElement.style.top	  = 0;
+	rendererCSS.domElement.style.margin	  = 0;
+	rendererCSS.domElement.style.padding  = 0;
+	
+	// when window resizes, also resize this renderer
+	//THREEx.WindowResize(rendererCSS, camera);
+
+	
+
 
 
 	renderer = Detector.webgl? new THREE.WebGLRenderer(): new THREE.CanvasRenderer();
 	renderer.setClearColor( 0xf0f0f0 );
 	renderer.setPixelRatio( window.devicePixelRatio );
 	renderer.setSize( window.innerWidth, window.innerHeight );
+	renderer.domElement.style.position	= 'absolute';
+	renderer.domElement.style.top	= 0;
+	renderer.domElement.style.zIndex	= -1;
 	container.appendChild( renderer.domElement );
+	container.appendChild( rendererCSS.domElement );
 
 	stats = new Stats();
 	stats.domElement.style.position = 'absolute';
@@ -198,6 +281,7 @@ function animate() {
 function render() {
 
 	cube.rotation.y += ( targetRotation - cube.rotation.y ) * 0.05;
+	rendererCSS.render( cssScene, camera );
 	renderer.render( scene, camera );
 
 }
